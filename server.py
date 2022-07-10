@@ -1,39 +1,103 @@
+from ast import Not
+from pickle import FALSE, TRUE
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+from cv2 import log
+import mysql.connector
+from datetime import datetime
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="",
+    database="roomchat"
+)
 
 
 def accept_incoming_connections():
     while True:
         client, client_address = SERVER.accept()
         print("%s:%s has connected." % client_address)
-        client.send(bytes("Nhập tên của bạn rồi bắt đầu chat!", "utf8"))
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 
 
 def handle_client(client):
-    name = client.recv(BUFSIZ).decode("utf8")
-    welcome = 'Xin chào %s! Nếu bạn muốn thoát gõ, {quit} để thoát.' % name
+    auth = False
+    username = ""
+    while not auth:
+        msg = client.recv(BUFSIZ)
+        if msg != bytes("{quit}", "utf8") and msg != bytes("", "utf8"):
+            login = msg.decode("utf8").split(';')
+            username = login[0]
+
+            auth = authentication(login[0], login[1])
+            client.send(bytes(str(auth), "utf8"))
+        else:
+            client.close()
+            break
+    print('Đăng nhập thành công')
+    load_old_message(client)
+    welcome = 'Xin chào %s! Nếu bạn muốn thoát gõ, {quit} để thoát.' % username
     client.send(bytes(welcome, "utf8"))
-    msg = "%s đã tham gia phòng chat!" % name
+    msg = "%s đã tham gia phòng chat!" % username
     broadcast(bytes(msg, "utf8"))
-    clients[client] = name
+    clients[client] = username
 
     while True:
         msg = client.recv(BUFSIZ)
         if msg != bytes("{quit}", "utf8"):
-            broadcast(msg, name + ": ")
+            insert_message(username, msg)
+            broadcast(msg, username + ": ")
         else:
-            client.send(bytes("{quit}", "utf8"))
             client.close()
             del clients[client]
-            broadcast(bytes("%s đã thoát phòng chat." % name, "utf8"))
+            broadcast(bytes("%s đã thoát phòng chat." % username, "utf8"))
             break
 
 
 def broadcast(msg, prefix=""):
-    for sock in clients:
-        sock.send(bytes(prefix, "utf8") + msg)
+    if len(clients) > 0:
+        for sock in clients:
+            sock.send(bytes(prefix, "utf8") + msg)
+
+
+def authentication(username, password):
+    mycursor = mydb.cursor()
+
+    mycursor.execute(
+        "SELECT * FROM `user` where username = '{}' and password = '{}'".format(username, password))
+
+    myresult = mycursor.fetchall()
+
+    return True if len(myresult) > 0 else False
+
+
+def insert_message(username, msg):
+    now = datetime.now()
+
+    dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+
+    mycursor = mydb.cursor()
+
+    sql = "INSERT INTO `message` (username, time, content) VALUES (%s,%s,%s)"
+    val = (username, dt_string, msg)
+
+    mycursor.execute(sql, val)
+
+    mydb.commit()
+
+
+def load_old_message(client):
+    mycursor = mydb.cursor()
+    mycursor.execute(
+        "SELECT * FROM `message`")
+
+    myresult = mycursor.fetchall()
+    for x in myresult:
+        client.send(bytes("{} ({}): {}\n".format(x[1], x[2], x[3]), "utf8"))
+
+    client.send(bytes("---------------------------\n", "utf8"))
 
 
 clients = {}
