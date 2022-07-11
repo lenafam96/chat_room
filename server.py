@@ -6,11 +6,18 @@ from cv2 import log
 import mysql.connector
 from datetime import datetime
 
+# mydb = mysql.connector.connect(
+#     host="localhost",
+#     user="root",
+#     password="",
+#     database="roomchat"
+# )
+
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="roomchat"
+    host="db4free.net",
+    user="lenafam96",
+    password="CK@l?KcZ6WUJVcv?",
+    database="lenafam96"
 )
 
 
@@ -91,19 +98,21 @@ def insert_message(username, msg):
 def load_old_message(client):
     mycursor = mydb.cursor()
     mycursor.execute(
-        "SELECT * FROM `message`")
+        "SELECT * FROM(SELECT * FROM `message` ORDER BY message_id DESC LIMIT 50) as LIST ORDER BY message_id ASC")
 
     myresult = mycursor.fetchall()
+    client.send(bytes("Tin nhắn cũ\n.....", "utf8"))
     for x in myresult:
         client.send(bytes("{} ({}): {}\n".format(x[1], x[2], x[3]), "utf8"))
 
-    client.send(bytes("---------------------------\n", "utf8"))
+    client.send(
+        bytes("-----------------------------------------------------\n", "utf8"))
 
 
 clients = {}
 addresses = {}
 
-HOST = '127.0.0.1'
+HOST = '192.168.1.12'
 PORT = 33000
 BUFSIZ = 1024
 ADDR = (HOST, PORT)

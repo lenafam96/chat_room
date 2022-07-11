@@ -1,10 +1,10 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",
-    database="roomchat"
+    host="db4free.net",
+    user="lenafam96",
+    password="CK@l?KcZ6WUJVcv?",
+    database="lenafam96"
 )
 
 mycursor = mydb.cursor()
@@ -14,10 +14,4 @@ mycursor.execute(
 
 myresult = mycursor.fetchall()
 
-# print(myresult[0][2])
-
-a = "a\nb"
-
-b = bytes(a, "utf8")
-
-print(b.decode('utf8'))
+print(myresult[0][2])
