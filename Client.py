@@ -1,5 +1,4 @@
 from tkinter import *
-from matplotlib.pyplot import text
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
@@ -10,7 +9,6 @@ class SampleApp(Tk):
         self._frame = None
         self.geometry('450x700')
         self.switch_frame(Login)
-        # self.switch_frame(MainWindows)
 
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)
@@ -118,7 +116,7 @@ class MainWindows(Frame):
 
 if __name__ == "__main__":
     # Kết nối tới server
-    HOST = '127.0.0.1'
+    HOST = '192.168.1.12'
     PORT = 33000
 
     BUFSIZ = 1024

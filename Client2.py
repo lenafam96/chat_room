@@ -1,5 +1,4 @@
 from tkinter import *
-from matplotlib.pyplot import text
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
@@ -10,7 +9,6 @@ class SampleApp(Tk):
         self._frame = None
         self.geometry('450x700')
         self.switch_frame(Login)
-        # self.switch_frame(MainWindows)
 
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)

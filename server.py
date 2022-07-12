@@ -1,8 +1,5 @@
-from ast import Not
-from pickle import FALSE, TRUE
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
-from cv2 import log
 import mysql.connector
 from datetime import datetime
 
