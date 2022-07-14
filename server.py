@@ -56,7 +56,7 @@ def handle_client(client):
             insert_message(username, msg)
             broadcast(msg, username + ": ")
         else:
-            print(get_time() + ": %s:%s has connected." % addresses[client])
+            print(get_time() + ": %s:%s has disconnected." % addresses[client])
             client.close()
             del clients[client]
             broadcast(bytes("%s đã thoát phòng chat." % username, "utf8"))
