@@ -41,8 +41,9 @@ def handle_client(client):
             auth = authentication(login[0], login[1])
             client.send(bytes(str(auth), "utf8"))
         else:
+            print(get_time() + ": %s:%s has disconnected." % addresses[client])
             client.close()
-            break
+            return
     load_old_message(client)
     welcome = 'Xin chào %s! Nếu bạn muốn thoát gõ, {quit} để thoát.' % username
     client.send(bytes(welcome, "utf8"))

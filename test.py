@@ -9,7 +9,6 @@ class SampleApp(Tk):
         self._frame = None
         self.geometry('450x700')
         self.switch_frame(Login)
-        # self.switch_frame(MainWindows)
 
     def switch_frame(self, frame_class):
         new_frame = frame_class(self)
@@ -41,12 +40,11 @@ class Login(Frame):
         Label(self, text="").grid(row=5, column=0)
         self.message = Label(self, text="")
         self.message.grid(row=6, column=0)
+        master.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def validateLogin(self):
         username = self.username.get()
         password = self.password.get()
-        print("username entered :", username)
-        print("password entered :", password)
 
         msg = "{};{}".format(username, password)
 
@@ -56,11 +54,15 @@ class Login(Frame):
             BUFSIZ).decode("utf8")
 
         if(answer == 'True'):
-            print('correct')
             self.master.switch_frame(MainWindows)
         else:
-            print('incorrect')
             self.message.config(text='incorrect')
+
+    def on_closing(self, event=None):
+        client_socket.send(bytes("{quit}", "utf8"))
+        client_socket.close()
+        self.master.quit()
+        print('quit')
 
 
 class MainWindows(Frame):
@@ -117,7 +119,7 @@ class MainWindows(Frame):
 
 if __name__ == "__main__":
     # Kết nối tới server
-    HOST = '192.168.1.12'
+    HOST = '127.0.0.1'
     PORT = 33000
 
     BUFSIZ = 1024

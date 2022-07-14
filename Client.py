@@ -40,6 +40,7 @@ class Login(Frame):
         Label(self, text="").grid(row=5, column=0)
         self.message = Label(self, text="")
         self.message.grid(row=6, column=0)
+        master.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     def validateLogin(self):
         username = self.username.get()
@@ -56,6 +57,12 @@ class Login(Frame):
             self.master.switch_frame(MainWindows)
         else:
             self.message.config(text='incorrect')
+
+    def on_closing(self, event=None):
+        client_socket.send(bytes("{quit}", "utf8"))
+        client_socket.close()
+        self.master.quit()
+        print('quit')
 
 
 class MainWindows(Frame):
