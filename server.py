@@ -10,12 +10,15 @@ from datetime import datetime
 #     database="roomchat"
 # )
 
-mydb = mysql.connector.connect(
-    host="db4free.net",
-    user="lenafam96",
-    password="CK@l?KcZ6WUJVcv?",
-    database="lenafam96"
-)
+try:
+    mydb = mysql.connector.connect(
+        host="sql6.freesqldatabase.com",
+        user="sql6505713",
+        password="MDkCNzPSum",
+        database="sql6505713"
+    )
+except:
+    print("Lỗi kết nối!")
 
 
 def accept_incoming_connections():
@@ -109,7 +112,7 @@ def load_old_message(client):
 clients = {}
 addresses = {}
 
-HOST = '192.168.1.12'
+HOST = '103.166.185.209'
 PORT = 33000
 BUFSIZ = 1024
 ADDR = (HOST, PORT)

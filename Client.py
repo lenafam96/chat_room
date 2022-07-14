@@ -116,7 +116,7 @@ class MainWindows(Frame):
 
 if __name__ == "__main__":
     # Kết nối tới server
-    HOST = '192.168.1.12'
+    HOST = '103.166.185.209'
     PORT = 33000
 
     BUFSIZ = 1024
