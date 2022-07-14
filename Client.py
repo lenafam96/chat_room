@@ -44,8 +44,6 @@ class Login(Frame):
     def validateLogin(self):
         username = self.username.get()
         password = self.password.get()
-        print("username entered :", username)
-        print("password entered :", password)
 
         msg = "{};{}".format(username, password)
 
@@ -55,10 +53,8 @@ class Login(Frame):
             BUFSIZ).decode("utf8")
 
         if(answer == 'True'):
-            print('correct')
             self.master.switch_frame(MainWindows)
         else:
-            print('incorrect')
             self.message.config(text='incorrect')
 
 

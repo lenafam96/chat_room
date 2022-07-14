@@ -43,7 +43,6 @@ def handle_client(client):
         else:
             client.close()
             break
-    print('Đăng nhập thành công')
     load_old_message(client)
     welcome = 'Xin chào %s! Nếu bạn muốn thoát gõ, {quit} để thoát.' % username
     client.send(bytes(welcome, "utf8"))
