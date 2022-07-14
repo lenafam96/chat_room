@@ -24,9 +24,7 @@ except:
 def accept_incoming_connections():
     while True:
         client, client_address = SERVER.accept()
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
-        print(dt_string + ": %s:%s has connected." % client_address)
+        print(get_time() + ": %s:%s has connected." % client_address)
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 
@@ -58,10 +56,16 @@ def handle_client(client):
             insert_message(username, msg)
             broadcast(msg, username + ": ")
         else:
+            print(get_time() + ": %s:%s has connected." % addresses[client])
             client.close()
             del clients[client]
             broadcast(bytes("%s đã thoát phòng chat." % username, "utf8"))
             break
+
+
+def get_time():
+    now = datetime.now()
+    return now.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def broadcast(msg, prefix=""):
@@ -82,9 +86,8 @@ def authentication(username, password):
 
 
 def insert_message(username, msg):
-    now = datetime.now()
 
-    dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+    dt_string = get_time()
 
     mycursor = mydb.cursor()
 
