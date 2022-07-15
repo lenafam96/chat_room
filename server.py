@@ -10,15 +10,20 @@ from datetime import datetime
 #     database="roomchat"
 # )
 
-try:
-    mydb = mysql.connector.connect(
-        host="sql6.freesqldatabase.com",
-        user="sql6505713",
-        password="MDkCNzPSum",
-        database="sql6505713"
-    )
-except:
-    print("Lỗi kết nối!")
+
+def get_connection():
+    try:
+        return mysql.connector.connect(
+            host="sql6.freesqldatabase.com",
+            user="sql6505713",
+            password="MDkCNzPSum",
+            database="sql6505713"
+        )
+    except:
+        get_connection()
+
+
+mydb = get_connection()
 
 
 def accept_incoming_connections():
